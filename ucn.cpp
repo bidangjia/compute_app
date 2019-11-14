@@ -35,44 +35,63 @@ double cpu_time = 20, comp_result;
 // otherwise the MS C++ compiler optimizes away
 // all but the first call to it!)
 //
-static double do_some_computing(int foo) {
-    double x = 3.14159*foo;
-    int i;
-    for (i=0; i<50000000; i++) {
-        x += 5.12313123;
-        x *= 0.5398394834;
+// static double do_some_computing(int foo) {
+//     double x = 3.14159*foo;
+//     int i;
+//     for (i=0; i<50000000; i++) {
+//         x += 5.12313123;
+//         x *= 0.5398394834;
+//     }
+//     return x;
+// }
+static double do_some_computing(int foo)
+{
+    int i, j, k = 0;
+    bool isPrime = true;
+    for (i = 1; i < foo; i++)
+    {
+        for (j = 2; i <= j / 2; ++j)
+        {
+            if (i % j == 0)
+            {
+                k++
+            }
+        }
     }
-    return x;
+    return foo - k;
 }
 
-int convert_file(char* in, char* out) {
+int convert_file(char *in, char *out)
+{
     char input_path[1024], output_path[1024];
     char buf[256];
 
     boinc_resolve_filename(in, input_path, sizeof(input_path));
-    FILE* infile = boinc_fopen(input_path, "r");
-    if (!infile) {
+    FILE *infile = boinc_fopen(input_path, "r");
+    if (!infile)
+    {
         fprintf(stderr,
-            "%s Couldn't find input file, resolved name %s.\n",
-            boinc_msg_prefix(buf, sizeof(buf)), input_path
-        );
+                "%s Couldn't find input file, resolved name %s.\n",
+                boinc_msg_prefix(buf, sizeof(buf)), input_path);
         return -1;
     }
 
     boinc_resolve_filename(out, output_path, sizeof(output_path));
-    FILE* outfile = boinc_fopen(output_path, "w");
-    if (!outfile) {
+    FILE *outfile = boinc_fopen(output_path, "w");
+    if (!outfile)
+    {
         fprintf(stderr,
-            "%s Couldn't find output file, resolved name %s.\n",
-            boinc_msg_prefix(buf, sizeof(buf)), output_path
-        );
+                "%s Couldn't find output file, resolved name %s.\n",
+                boinc_msg_prefix(buf, sizeof(buf)), output_path);
         fclose(infile);
         return -1;
     }
 
-    while (1) {
+    while (1)
+    {
         char c = fgetc(infile);
-        if (c == EOF) break;
+        if (c == EOF)
+            break;
         c = toupper(c);
         fputc(c, outfile);
     }
@@ -82,33 +101,42 @@ int convert_file(char* in, char* out) {
     return 0;
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     char buf[256];
     int retval = boinc_init();
-    if (retval) {
+    if (retval)
+    {
         fprintf(stderr, "%s boinc_init returned %d\n",
-            boinc_msg_prefix(buf, sizeof(buf)), retval
-        );
+                boinc_msg_prefix(buf, sizeof(buf)), retval);
         exit(retval);
     }
 
-    for (int i=1; i<argc; i++) {
-        if (!strcmp(argv[i], "--cpu_time")) {
+    for (int i = 1; i < argc; i++)
+    {
+        if (!strcmp(argv[i], "--cpu_time"))
+        {
             cpu_time = atof(argv[++i]);
-        } else {
-            retval = convert_file(argv[i], argv[i+1]);
-            if (retval) exit(-1);
+        }
+        else
+        {
+            retval = convert_file(argv[i], argv[i + 1]);
+            if (retval)
+                exit(-1);
             i++;
         }
     }
 
     // burn up some CPU time if needed
     //
-    if (cpu_time) {
+    if (cpu_time)
+    {
         double start = dtime();
-        for (int i=0; ; i++) {
-            double e = dtime()-start;
-            if (e > cpu_time) break;
+        for (int i = 0;; i++)
+        {
+            double e = dtime() - start;
+            if (e > cpu_time)
+                break;
             comp_result = do_some_computing(i);
         }
     }
@@ -117,10 +145,10 @@ int main(int argc, char **argv) {
 
 #ifdef _WIN32
 int WINAPI WinMain(
-    HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR Args, int WinMode
-) {
+    HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR Args, int WinMode)
+{
     LPSTR command_line;
-    char* argv[100];
+    char *argv[100];
     int argc;
 
     command_line = GetCommandLine();
