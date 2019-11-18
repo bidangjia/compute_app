@@ -46,6 +46,7 @@ double cpu_time = 20, comp_result;
 // }
 static double do_some_computing(int foo)
 {
+    int foo = 1000000000;
     int i, j, k = 0;
     bool isPrime = true;
     for (i = 1; i < foo; i++)
