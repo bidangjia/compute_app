@@ -46,16 +46,16 @@ double cpu_time = 20, comp_result;
 // }
 static double do_some_computing(int foo)
 {
-    int foo = 1000000000;
+    int f = 1000000000;
     int i, j, k = 0;
     bool isPrime = true;
-    for (i = 1; i < foo; i++)
+    for (i = 1; i < f; i++)
     {
         for (j = 2; i <= j / 2; ++j)
         {
             if (i % j == 0)
             {
-                k++
+                k++;
             }
         }
     }
